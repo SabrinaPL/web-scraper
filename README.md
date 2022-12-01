@@ -41,16 +41,9 @@ Use the browser's inspector to analyze the traffic.
 
 The third website is for the three friends' favorite restaurant (the only one they visit). The application must log in using the credentials below to scrape what times they can book a table.
 
-<table>
-  <tr>
-    <td>username</td>
-    <td>zeke</td>
-  </tr>
-  <tr>
-    <td>password</td>
-    <td>coys</td>
-  </tr>
-</table>
+|username|zeke|
+|--------|----|
+|password|coys|
 
 The website uses session cookies for authorization, which the application must handle. After a successful login, the scraper can find available times.
 
