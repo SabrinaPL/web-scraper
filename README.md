@@ -4,7 +4,7 @@ In this assignment, you got to help three friends, Peter, Paul, and Mary, plan t
 
 The friends have their calendars online on a website, and the cinema and restaurant they visit also have websites. The friends realize that the planning of an evening should be automated but do not know how to do it. They know that they do not need a GUI and want to run the application from a command prompt and that Peter prefers Windows, Paul prefers macOS, and Mary prefers Linux (#1).
 
-Your task is to help the three friends by writing a web scraper that scrapes and analyzes data from the mentioned websites (explicitly built for this task). The application should be so generally written that it can handle two different start URLs, https://courselab.lnu.se/scraper-site-1 and https://courselab.lnu.se/scraper-site-2. (#3)
+Your task is to help the three friends by writing a web scraper that scrapes and analyzes data from the mentioned websites (explicitly built for this task). The application should be so generally written that it can handle two different start URLs, <https://courselab.lnu.se/scraper-site-1> and <https://courselab.lnu.se/scraper-site-2>. (#3)
 
 The start URL must be passed as an argument when starting the application. The URLs are each leading to three other websites. It is irrelevant how these websites work under the hood. The interesting part is how the HTML is rendered and how to make HTTP requests to retrieve data. It does not matter which URL the application starts with because the websites are nearly the same, and only the data scraped differs, and thus the suggestions the application finally lists.
 
@@ -64,9 +64,9 @@ You must use the repository created for you and this assignment and make continu
 
 You must write the web scraper as a Node.js application (#1) and follow the course's coding standard (#10). You must split your source code into several modules (#12). Of course, you need to document and comment on the source code (#11).
 
-After cloning the repository with the application's source code and running `npm install`, it must be easy to lint the source code and run the application. Therefore, add the script `start` and `lint` to the "scripts" field in the `package.json` file. (#14)
+After cloning the repository with the application's source code and running the `npm install` command, it must be easy to lint the source code and run the application. Therefore, add the script `start` and `lint` to the "scripts" field in the `package.json` file. (#14)
 
-The user must pass the start URL as an argument (#2, #3). That is the only input the user should do during the scrape process (#2). Below is an example of how to start the scraper using https://courselab.lnu.se/scraper-site-1 as the start URL:
+The user must pass the start URL as an argument (#2, #3). That is the only input the user should do during the scrape process (#2). Below is an example of how to start the scraper using <https://courselab.lnu.se/scraper-site-1> as the start URL:
 
 ```shell
 npm start https://courselab.lnu.se/scraper-site-1
@@ -80,7 +80,7 @@ According to the details below, the web scraper must present the suggestions in 
 
 ### Using the first start URL
 
-If https://courselab.lnu.se/scraper-site-1 is used as the start URL, the list of suggestions must be exact:
+If <https://courselab.lnu.se/scraper-site-1> is used as the start URL, the list of suggestions must be exact:
 
 ```shell
 Scraping links...OK
@@ -98,7 +98,7 @@ The result should not be more verbose than this. Be sure to delete all other sta
 
 ### Using the second start URL
 
-For the second URL, https://courselab.lnu.se/scraper-site-2, some of the data and URLs have changed. Your web scraper must be able to produce the correct suggestions for this start URL as well. The list of suggestions from the scraper must be exact:
+For the second URL, <https://courselab.lnu.se/scraper-site-2>, some of the data and URLs have changed. Your web scraper must be able to produce the correct suggestions for this start URL as well. The list of suggestions from the scraper must be exact:
 
 ```shell
 Scraping links...OK
