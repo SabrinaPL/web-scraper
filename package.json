@@ -4,6 +4,9 @@
   "description": "In this assignment, you got to help three friends, Peter, Paul, and Mary, plan their once-a-month gathering. Once a month, they gather to watch a movie and then dine at their favorite restaurant. It is quite difficult for the three friends to plan a gathering because they first have to find at least one day when everyone can find a movie and finally find a time when a table is free to book at the restaurant.",
   "main": "index.js",
   "type": "module",
+  "eslintConfig": {
+    "extends": "@lnu"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +14,17 @@
   "author": "Sabrina Prichard-Lybeck <sp223kz@student.lnu.se>",
   "license": "ISC",
   "dependencies": {
+    "fetch": "^1.1.0",
+    "jsdom": "^23.0.1",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
     "@lnu/eslint-config": "^1.1.10",
-    "fetch": "^1.1.0"
+    "eslint": "^8.47.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsdoc": "^46.5.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1"
   }
 }
