@@ -1,0 +1,17 @@
+{
+  "name": "assignment-a2-the-gathering-web-scraper",
+  "version": "1.0.0",
+  "description": "In this assignment, you got to help three friends, Peter, Paul, and Mary, plan their once-a-month gathering. Once a month, they gather to watch a movie and then dine at their favorite restaurant. It is quite difficult for the three friends to plan a gathering because they first have to find at least one day when everyone can find a movie and finally find a time when a table is free to book at the restaurant.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Sabrina Prichard-Lybeck <sp223kz@student.lnu.se>",
+  "license": "ISC",
+  "dependencies": {
+    "@lnu/eslint-config": "^1.1.10",
+    "fetch": "^1.1.0"
+  }
+}
