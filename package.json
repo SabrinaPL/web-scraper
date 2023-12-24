@@ -8,7 +8,8 @@
     "extends": "@lnu"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/app.js",
+    "lint": "npx eslint ./src || exit 0"
   },
   "keywords": [],
   "author": "Sabrina Prichard-Lybeck <sp223kz@student.lnu.se>",
