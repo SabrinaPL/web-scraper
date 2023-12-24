@@ -29,19 +29,33 @@ export class WebScraper {
         const response = await fetch(url)
         const body = await response.text()
         const dom = new jsdom.JSDOM(body)
-        // Here I select all the a-tags from the previously generated DOM and create an array of all the urls (containing http and https) on the page and convert the NodeList to a true array using Array.from(), as in the example shown by Mats in övningsuppgift The promising web scraper - lösningsförslag.
-        const links = Array.from(dom.window.document.querySelectorAll('a[href^="http"],a[href^="https"]'))
-        // Here I want to iterate through the links array, pick out the hrefs and push them into a new array.
-        const href = []
-        for (const link of links) {
-          href.push(link.href)
-        }
-        // Console log to test that the href array contains the correct links.
-        console.log(href)
-        return href
+
+        this.findUrls(dom)
       }
     } catch (error) {
       console.error(error)
     }
+  }
+
+  /**
+   * Method to find urls.
+   *
+   * @function
+   * @param {object} dom - The DOM that was created when a webpage was scraped.
+   * @returns {string[]} An array of strings containing the URLs found on the page.
+   */
+  findUrls (dom) {
+    // Here I select all the a-tags from the previously generated DOM and create an array of all the urls (containing http and https) on the page and convert the NodeList to a true array using Array.from(), as in the example shown by Mats in övningsuppgift The promising web scraper - lösningsförslag.
+    const links = Array.from(dom.window.document.querySelectorAll('a[href^="http"],a[href^="https"]'))
+
+    // Here I want to iterate through the links array, pick out the hrefs and push them into a new array.
+    const href = []
+    for (const link of links) {
+      href.push(link.href)
+    }
+
+    // Console log to test that the href array contains the correct links.
+    console.log(href)
+    return href
   }
 }
