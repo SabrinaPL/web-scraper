@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { WebScraper } from './web-scraper.js'
+import { Orchestrator } from './application.js'
 
 try {
   // I want to delete the two default items in process.argv and then create a new array with the remaining items, which should be the url that has been inputted by the user.
@@ -17,9 +17,11 @@ try {
   } else {
     const url = commandLineInput[0]
 
-    const scraper = new WebScraper()
-    scraper.scrapeWebPage(url)
+    const orchestrator = new Orchestrator()
+    orchestrator.start(url)
   }
 } catch (error) {
   console.log(error)
+} finally {
+  console.log('The web scraper has finished running')
 }

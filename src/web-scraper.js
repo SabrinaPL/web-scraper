@@ -15,6 +15,8 @@ import fetch from 'node-fetch'
  * @class
  */
 export class WebScraper {
+  #href = []
+
   /**
    * Asyncronous method to scrape information from a webpage.
    *
@@ -30,10 +32,12 @@ export class WebScraper {
         const body = await response.text()
         const dom = new jsdom.JSDOM(body)
 
-        this.findUrls(dom)
+        return dom
       }
     } catch (error) {
       console.error(error)
+    } finally {
+      console.log('The web scraper has finished scraping')
     }
   }
 
@@ -41,21 +45,20 @@ export class WebScraper {
    * Method to find urls.
    *
    * @function
-   * @param {object} dom - The DOM that was created when a webpage was scraped.
-   * @returns {string[]} An array of strings containing the URLs found on the page.
+   * @param {object} url - the url to scrape.
    */
-  findUrls (dom) {
+  async findUrls (url) {
+    const dom = await this.scrapeWebPage(url)
+
     // Here I select all the a-tags from the previously generated DOM and create an array of all the urls (containing http and https) on the page and convert the NodeList to a true array using Array.from(), as in the example shown by Mats in övningsuppgift The promising web scraper - lösningsförslag.
     const links = Array.from(dom.window.document.querySelectorAll('a[href^="http"],a[href^="https"]'))
 
     // Here I want to iterate through the links array, pick out the hrefs and push them into a new array.
-    const href = []
     for (const link of links) {
-      href.push(link.href)
+      this.#href.push(link.href)
     }
 
-    // Console log to test that the href array contains the correct links.
-    console.log(href)
-    return href
+    // Here I want to remove any duplicate links from the href array and I do this by using the Set object, as shown by Mats in övningsuppgift The promising web scraper - lösningsförslag.
+    this.#href = [...new Set(this.#href)]
   }
 }
