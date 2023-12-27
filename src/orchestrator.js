@@ -17,8 +17,8 @@ export class Orchestrator {
    * @function
    * @param {string} url - The URL to scrape.
    */
-  start (url) {
+  async start (url) {
     const scraper = new WebScraper()
-    scraper.findUrls(url)
+    await scraper.findUrls(url)
   }
 }
