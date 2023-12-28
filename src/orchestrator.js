@@ -19,6 +19,17 @@ export class Orchestrator {
    */
   async start (url) {
     const scraper = new WebScraper()
-    await scraper.findUrls(url)
+    const href = await scraper.findUrls(url)
+    console.log(href)
+
+    const calendarLinks = await scraper.findUrls(href[0])
+
+    console.log(calendarLinks)
+
+    const calendarLinkAbsolute = await scraper.createAbsoluteUrl(href[0], calendarLinks[0])
+    console.log(calendarLinkAbsolute)
+
+    const availableDates = await scraper.findAvailableDates(calendarLinkAbsolute)
+    console.log(availableDates)
   }
 }
