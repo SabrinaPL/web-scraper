@@ -81,9 +81,9 @@ export class WebScraper {
       const daysInfo = Array.from(dom.window.document.querySelectorAll('thead tr th'))
       const availableInfo = Array.from(dom.window.document.querySelectorAll('tbody tr td'))
 
-      // Here I retrieve the text content of the available dates (with a code snippet suggested by chatGPT).
+      // Here I retrieve the text content of the available dates (with a code snippet suggested by chatGPT) and also convert the text to uppercase to make it easier to compare the dates later on.
       const days = daysInfo.map(day => day.textContent)
-      const available = availableInfo.map(date => date.textContent)
+      const available = availableInfo.map(date => date.textContent.toUpperCase())
 
       const availableDates = { }
 
