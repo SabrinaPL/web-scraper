@@ -12,6 +12,7 @@ import { WebScraper } from './web-scraper.js'
  */
 export class Orchestrator {
   #url = ''
+  #href
 
   /**
    * Creates an instance of the Web Scraper.
@@ -32,7 +33,9 @@ export class Orchestrator {
   async start (url) {
     try {
       this.#url = url
-      await this.scrapeData()
+      await this.scrapeLinks()
+      await this.scrapeCalendar()
+      await this.checkPossibleDays()
     } catch (error) {
       console.log(error)
     }
@@ -44,28 +47,59 @@ export class Orchestrator {
    * @async
    * @function
    */
-  async scrapeData () {
+  async scrapeLinks () {
     try {
       // Code to scrape links.
-      const href = await this.scraper.findUrls(this.#url)
-      const calendarLinks = await this.scraper.findUrls(href[0])
+      this.#href = await this.scraper.findUrls(this.#url)
 
       console.log('Scraping links... OK')
-
-      // Code to scrape dates.
-      const availableDates = []
-
-      for (let i = 0; i < calendarLinks.length; i++) {
-        const calendarLinkAbsolute = this.scraper.createAbsoluteUrl(href[0], calendarLinks[i])
-        availableDates.push(await this.scraper.findAvailableDates(calendarLinkAbsolute))
-      }
-
-      console.log('Scraping available days... OK')
-
-      // Code to scrape showtimes.
-      await this.scraper.findShowtimes(href[1])
     } catch (error) {
       console.log(error)
     }
+  }
+
+  /**
+   * Method to scrape calendar.
+   *
+   * @async
+   * @function
+   */
+  async scrapeCalendar () {
+    const calendarLinks = await this.scraper.findUrls(this.#href[0])
+
+    const availableDates = []
+
+    for (let i = 0; i < calendarLinks.length; i++) {
+      const calendarLinkAbsolute = this.scraper.createAbsoluteUrl(this.#href[0], calendarLinks[i])
+      availableDates.push(await this.scraper.findAvailableDates(calendarLinkAbsolute))
+    }
+
+    console.log('Scraping available days... OK')
+  }
+
+  /**
+   * Method to scrape show times from the cinema page.
+   *
+   * @async
+   * @function
+   */
+  async scrapeShowTimes () {
+    try {
+      // Code to scrape showtimes.
+      await this.scraper.findShowtimes(this.#href[1])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /**
+   * Method to check which days the friends are available.
+   *
+   * @function
+   */
+  checkPossibleDays () {
+    const possibleDays = []
+
+    console.log(possibleDays)
   }
 }

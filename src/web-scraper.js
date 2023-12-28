@@ -91,6 +91,8 @@ export class WebScraper {
         availableDates[days[i]] = available[i]
       }
 
+      console.log(availableDates)
+
       return availableDates
     } catch (error) {
       console.log(error)
@@ -108,7 +110,6 @@ export class WebScraper {
   async findShowtimes (url) {
     try {
       const dom = await this.scrapeWebPage(url)
-      console.log(dom)
     } catch (error) {
       console.log(error)
     }
