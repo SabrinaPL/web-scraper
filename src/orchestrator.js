@@ -46,20 +46,24 @@ export class Orchestrator {
    */
   async scrapeData () {
     try {
+      // Code to scrape links.
       const href = await this.scraper.findUrls(this.#url)
-
       const calendarLinks = await this.scraper.findUrls(href[0])
 
       console.log('Scraping links... OK')
 
+      // Code to scrape dates.
       const availableDates = []
 
       for (let i = 0; i < calendarLinks.length; i++) {
-        const calendarLinkAbsolute = await this.scraper.createAbsoluteUrl(href[0], calendarLinks[i])
+        const calendarLinkAbsolute = this.scraper.createAbsoluteUrl(href[0], calendarLinks[i])
         availableDates.push(await this.scraper.findAvailableDates(calendarLinkAbsolute))
       }
 
-      console.log('Scraping dates... OK')
+      console.log('Scraping available days... OK')
+
+      // Code to scrape showtimes.
+      await this.scraper.findShowtimes(href[1])
     } catch (error) {
       console.log(error)
     }

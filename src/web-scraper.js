@@ -98,6 +98,23 @@ export class WebScraper {
   }
 
   /**
+   * Method to scrape showtimes.
+   *
+   * @async
+   * @function
+   * @param {object} url - the url to scrape.
+   * @returns {Promise<string[]>} An array of strings containing the showtimes found on the page.
+   */
+  async findShowtimes (url) {
+    try {
+      const dom = await this.scrapeWebPage(url)
+      console.log(dom)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /**
    * Method to convert a relative url to an absolute url.
    *
    * @function
