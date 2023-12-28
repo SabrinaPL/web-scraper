@@ -85,7 +85,11 @@ export class WebScraper {
       const days = daysInfo.map(day => day.textContent)
       const available = availableInfo.map(date => date.textContent)
 
-      const availableDates = { days, available }
+      const availableDates = { }
+
+      for (let i = 0; i < days.length; i++) {
+        availableDates[days[i]] = available[i]
+      }
 
       return availableDates
     } catch (error) {
