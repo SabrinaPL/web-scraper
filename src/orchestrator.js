@@ -33,46 +33,35 @@ export class Orchestrator {
   async start (url) {
     try {
       this.#url = url
-      await this.scrapeLinks()
-      await this.scrapeCalendar()
-      await this.checkPossibleDays()
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  /**
-   * Method to scrape data.
-   *
-   * @async
-   * @function
-   */
-  async scrapeLinks () {
-    try {
-      // Code to scrape links.
-      this.#href = await this.scraper.findUrls(this.#url)
-
+      await this.scraper.scrapeWebPage(this.#url)
+      this.#href = await this.scraper.scrapeUrls(this.#url)
       console.log('Scraping links... OK')
+
+      await this.checkCalendar()
     } catch (error) {
       console.log(error)
     }
   }
 
   /**
-   * Method to scrape calendar.
+   * Method to check calendar.
    *
    * @async
    * @function
    */
-  async scrapeCalendar () {
-    const calendarLinks = await this.scraper.findUrls(this.#href[0])
+  async checkCalendar () {
+    const calendarLinks = await this.scraper.scrapeUrls(this.#href[0])
 
-    const availableDates = []
+    const calendars = []
 
     for (let i = 0; i < calendarLinks.length; i++) {
-      const calendarLinkAbsolute = this.scraper.createAbsoluteUrl(this.#href[0], calendarLinks[i])
-      availableDates.push(await this.scraper.findAvailableDates(calendarLinkAbsolute))
+      const calendarLinkAbsolute = this.createAbsoluteUrl(this.#href[0], calendarLinks[i])
+      calendars.push(await this.scraper.scrapeCalendar(calendarLinkAbsolute))
     }
+
+    console.log(calendars)
+
+    // Code to check calendar to find available days.
 
     console.log('Scraping available days... OK')
   }
@@ -83,23 +72,28 @@ export class Orchestrator {
    * @async
    * @function
    */
-  async scrapeShowTimes () {
+  async checkShowTimes () {
     try {
       // Code to scrape showtimes.
-      await this.scraper.findShowtimes(this.#href[1])
+      await this.scraper.scrapeShowtimes(this.#href[1])
     } catch (error) {
       console.log(error)
     }
   }
 
   /**
-   * Method to check which days the friends are available.
+   * Method to convert a relative url to an absolute url.
    *
    * @function
+   * @param {string} url - The url pathway.
+   * @param {string} relativeUrl - The relative url to convert to an absolute url.
+   * @returns {string} The absolute url.
    */
-  checkPossibleDays () {
-    const possibleDays = []
+  createAbsoluteUrl (url, relativeUrl) {
+    // Here I decided to use the slice-method to remove the first two characters from the relative url and then concatenate the url and the relative url to create an absolute url.
+    relativeUrl = relativeUrl.slice(2, relativeUrl.length)
+    const absoluteUrl = url + relativeUrl
 
-    console.log(possibleDays)
+    return absoluteUrl
   }
 }

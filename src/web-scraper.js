@@ -44,7 +44,7 @@ export class WebScraper {
    * @param {object} url - the url to scrape.
    * @returns {Promise<string[]>} An array of strings containing the URLs found on the page.
    */
-  async findUrls (url) {
+  async scrapeUrls (url) {
     try {
       const dom = await this.scrapeWebPage(url)
 
@@ -74,7 +74,7 @@ export class WebScraper {
    * @param {object} url - the url to scrape.
    * @returns {Promise<string[]>} An array of strings containing the available dates found on the page.
    */
-  async findAvailableDates (url) {
+  async scrapeCalendar (url) {
     try {
       const dom = await this.scrapeWebPage(url)
 
@@ -85,15 +85,13 @@ export class WebScraper {
       const days = daysInfo.map(day => day.textContent)
       const available = availableInfo.map(date => date.textContent.toUpperCase())
 
-      const availableDates = { }
+      const calendar = { }
 
       for (let i = 0; i < days.length; i++) {
-        availableDates[days[i]] = available[i]
+        calendar[days[i]] = available[i]
       }
 
-      console.log(availableDates)
-
-      return availableDates
+      return calendar
     } catch (error) {
       console.log(error)
     }
@@ -107,27 +105,11 @@ export class WebScraper {
    * @param {object} url - the url to scrape.
    * @returns {Promise<string[]>} An array of strings containing the showtimes found on the page.
    */
-  async findShowtimes (url) {
+  async scrapeShowtimes (url) {
     try {
       const dom = await this.scrapeWebPage(url)
     } catch (error) {
       console.log(error)
     }
-  }
-
-  /**
-   * Method to convert a relative url to an absolute url.
-   *
-   * @function
-   * @param {string} url - The url pathway.
-   * @param {string} relativeUrl - The relative url to convert to an absolute url.
-   * @returns {string} The absolute url.
-   */
-  createAbsoluteUrl (url, relativeUrl) {
-    // Here I decided to use the slice-method to remove the first two characters from the relative url and then concatenate the url and the relative url to create an absolute url.
-    relativeUrl = relativeUrl.slice(2, relativeUrl.length)
-    const absoluteUrl = url + relativeUrl
-
-    return absoluteUrl
   }
 }
