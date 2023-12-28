@@ -12,7 +12,7 @@ import { WebScraper } from './web-scraper.js'
  */
 export class Orchestrator {
   /**
-   * Method to start application.
+   * Method to start and orchestrate application process.
    *
    * @function
    * @param {string} url - The URL to scrape.
@@ -26,10 +26,13 @@ export class Orchestrator {
 
     console.log(calendarLinks)
 
-    const calendarLinkAbsolute = await scraper.createAbsoluteUrl(href[0], calendarLinks[0])
-    console.log(calendarLinkAbsolute)
+    const availableDates = []
 
-    const availableDates = await scraper.findAvailableDates(calendarLinkAbsolute)
+    for (let i = 0; i < calendarLinks.length; i++) {
+      const calendarLinkAbsolute = await scraper.createAbsoluteUrl(href[0], calendarLinks[i])
+      availableDates.push(await scraper.findAvailableDates(calendarLinkAbsolute))
+    }
+
     console.log(availableDates)
   }
 }

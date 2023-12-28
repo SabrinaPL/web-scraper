@@ -78,7 +78,15 @@ export class WebScraper {
     try {
       const dom = await this.scrapeWebPage(url)
 
-      const availableDates = Array.from(dom.window.document.querySelectorAll('tbody[td]'))
+      const daysInfo = Array.from(dom.window.document.querySelectorAll('thead tr th'))
+      const availableInfo = Array.from(dom.window.document.querySelectorAll('tbody tr td'))
+
+      // Here I retrieve the text content of the available dates (with a code snippet suggested by chatGPT).
+      const days = daysInfo.map(day => day.textContent)
+      const available = availableInfo.map(date => date.textContent)
+
+      const availableDates = { days, available }
+
       return availableDates
     } catch (error) {
       console.log(error)
