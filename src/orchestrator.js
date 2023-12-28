@@ -13,6 +13,7 @@ import { WebScraper } from './web-scraper.js'
 export class Orchestrator {
   #url = ''
   #href
+  #availableDays = []
 
   /**
    * Creates an instance of the Web Scraper.
@@ -38,6 +39,7 @@ export class Orchestrator {
       console.log('Scraping links... OK')
 
       await this.checkCalendar()
+      console.log('Scraping available days... OK')
     } catch (error) {
       console.log(error)
     }
@@ -61,9 +63,22 @@ export class Orchestrator {
 
     console.log(calendars)
 
-    // Code to check calendar to find available days.
+    // Here I use the every-method to check (against the key value pairs in the calendar object) if all friends are available on a specific day.
+    const fridayOK = calendars.every(calendar => calendar.Friday === 'OK')
+    const saturdayOK = calendars.every(calendar => calendar.Saturday === 'OK')
+    const sundayOK = calendars.every(calendar => calendar.Sunday === 'OK')
 
-    console.log('Scraping available days... OK')
+    if (fridayOK) {
+      this.#availableDays.push('Friday')
+    }
+    if (saturdayOK) {
+      this.#availableDays.push('Saturday')
+    }
+    if (sundayOK) {
+      this.#availableDays.push('Sunday')
+    }
+
+    console.log(this.#availableDays)
   }
 
   /**
