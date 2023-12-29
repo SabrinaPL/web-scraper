@@ -39,9 +39,10 @@ export class Orchestrator {
       console.log('Scraping links... OK')
 
       await this.checkCalendar()
-      console.log('Scraping available days... OK')
+      console.log('Scraping available times... OK')
 
       await this.checkShowTimes()
+      console.log('Scraping showtimes... OK')
     } catch (error) {
       console.log(error)
     }
@@ -78,9 +79,9 @@ export class Orchestrator {
     }
     if (sundayOK) {
       this.#availableDays.push('Sunday')
+    } else if (!fridayOK && !saturdayOK && !sundayOK) {
+      console.log('No days available when all friends can meet')
     }
-
-    console.log(this.#availableDays)
   }
 
   /**

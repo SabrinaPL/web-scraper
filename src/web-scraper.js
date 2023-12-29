@@ -170,6 +170,7 @@ export class WebScraper {
           console.log(error)
         }
       }
+
       return showtimes
     } catch (error) {
       console.log(error)
