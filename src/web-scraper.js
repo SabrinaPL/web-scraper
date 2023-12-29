@@ -113,7 +113,6 @@ export class WebScraper {
       const daysToCheck = availableDays
       const moviesToCheck = {}
       const movieDays = {}
-      const movieTitles = []
       const valuesToCheck = []
 
       // I changed the code as to retrieve the movie titles and their corresponding values straight from the DOM and creating an object with the info (same with the movie days, see code below), instead of hard coding them as before (similarly as in the scrapeCalendar method). Slice is used to slice away the "pick a movie"-option.
@@ -126,9 +125,7 @@ export class WebScraper {
         moviesToCheck[movieTitle] = movieValue
       })
 
-      movieTitles.push(Object.keys(moviesToCheck))
-
-      console.log(moviesToCheck)
+      const movieTitles = Object.keys(moviesToCheck)
       console.log(movieTitles)
 
       const dayInfo = Array.from(dom.window.document.querySelectorAll('select#day option')).slice(1, 4)
@@ -138,13 +135,21 @@ export class WebScraper {
         const dayValue = day.value
         movieDays[dayText] = dayValue
       })
-      console.log(movieDays)
+
+      // I want to check which days are available and push the corresponding values into the valuesToCheck array.
+      for (const day in movieDays) {
+        if (daysToCheck.includes(day)) {
+          valuesToCheck.push(movieDays[day])
+        }
+      }
 
       // Here I use a nested for-loop to iterate through the available days and the movies to modify the url (with the retrieved values) so that I can use it in a fetch-request to check the showtimes for the available days.
       for (let i = 0; i < daysToCheck.length; i++) {
         for (let j = 0; j < movieTitles.length; j++) {
           const currentMovie = movieTitles[j]
           const urlToCheck = url + '/check?day=' + valuesToCheck[i] + '&movie=' + moviesToCheck[currentMovie]
+
+          console.log(urlToCheck)
         }
       }
     } catch (error) {
