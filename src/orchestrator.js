@@ -40,6 +40,8 @@ export class Orchestrator {
 
       await this.checkCalendar()
       console.log('Scraping available days... OK')
+
+      await this.checkShowTimes()
     } catch (error) {
       console.log(error)
     }
@@ -90,7 +92,7 @@ export class Orchestrator {
   async checkShowTimes () {
     try {
       // Code to scrape showtimes.
-      await this.scraper.scrapeShowtimes(this.#href[1])
+      await this.scraper.scrapeShowtimes(this.#href[1], this.#availableDays)
     } catch (error) {
       console.log(error)
     }

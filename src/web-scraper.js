@@ -103,11 +103,32 @@ export class WebScraper {
    * @async
    * @function
    * @param {object} url - the url to scrape.
+   * @param {string[]} availableDays - An array of strings containing the available days for the friends to meet.
    * @returns {Promise<string[]>} An array of strings containing the showtimes found on the page.
    */
-  async scrapeShowtimes (url) {
+  async scrapeShowtimes (url, availableDays) {
     try {
       const dom = await this.scrapeWebPage(url)
+      const daysToCheck = availableDays
+      const valuesToCheck = []
+
+      // Here I want to iterate through the available days array and check if the days are available in the dropdown menu. If they are, I want to push the values to a new array.
+      for (let i = 0; i < daysToCheck.length; i++) {
+        if (daysToCheck[i] === 'Friday') {
+          valuesToCheck.push(dom.window.document.querySelector('select#day option').value = '05')
+        }
+        if (daysToCheck[i] === 'Saturday') {
+          valuesToCheck.push(dom.window.document.querySelector('select#day option').value = '06')
+        }
+        if (daysToCheck[i] === 'Sunday') {
+          valuesToCheck.push(dom.window.document.querySelector('select#day option').value = '07')
+        }
+      }
+
+      console.log(valuesToCheck)
+      console.log(daysToCheck)
+
+      // await fetch()
     } catch (error) {
       console.log(error)
     }
