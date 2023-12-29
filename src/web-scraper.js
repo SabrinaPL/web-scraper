@@ -111,8 +111,9 @@ export class WebScraper {
       const dom = await this.scrapeWebPage(url)
       const daysToCheck = availableDays
       const valuesToCheck = []
+      const moviesToCheck = { 'The Flying Deuces': '01', 'Keep Your Seats, Please': '02', 'A Day at the Races': '03' }
 
-      // Here I want to iterate through the available days array and check if the days are available in the dropdown menu. If they are, I want to push the values to a new array.
+      // Here I want to iterate through the available days array and check the day(s) in the availableDays array against the days in the dropdown menu to retrieve the value(s) for the day(s) that I want to check and push them into a new array.
       for (let i = 0; i < daysToCheck.length; i++) {
         if (daysToCheck[i] === 'Friday') {
           valuesToCheck.push(dom.window.document.querySelector('select#day option').value = '05')
@@ -125,6 +126,11 @@ export class WebScraper {
         }
       }
 
+      // Here I modify the url (with the retrieved values) so that I can use it in a fetch-request to check the showtimes for the available days.
+      const urlToCheck = url + '/check?day=' + valuesToCheck[0] + '&movie=' + moviesToCheck['The Flying Deuces']
+
+      console.log(urlToCheck)
+      console.log(url)
       console.log(valuesToCheck)
       console.log(daysToCheck)
 
