@@ -14,6 +14,7 @@ export class Orchestrator {
   #url = ''
   #href
   #availableDays = []
+  #availableShowtimes = []
 
   /**
    * Creates an instance of the Web Scraper.
@@ -93,8 +94,17 @@ export class Orchestrator {
   async checkShowTimes () {
     try {
       // Code to scrape showtimes.
-      const showtimes = await this.scraper.scrapeShowtimes(this.#href[1], this.#availableDays)
+      const showtimesInfo = await this.scraper.scrapeShowtimes(this.#href[1], this.#availableDays)
+      const showtimes = showtimesInfo.flat()
+
+      for (const showtime of showtimes) {
+        if (showtime.status === 1) {
+          this.#availableShowtimes.push(showtime)
+        }
+      }
+
       console.log(showtimes)
+      console.log(this.#availableShowtimes)
     } catch (error) {
       console.log(error)
     }
