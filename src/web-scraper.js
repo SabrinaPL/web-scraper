@@ -114,6 +114,8 @@ export class WebScraper {
       const moviesToCheck = {}
       const movieDays = {}
       const valuesToCheck = []
+      const showtimes = []
+      const urlsToCheck = []
 
       // I changed the code as to retrieve the movie titles and their corresponding values straight from the DOM and creating an object with the info (same with the movie days, see code below), instead of hard coding them as before (similarly as in the scrapeCalendar method). Slice is used to slice away the "pick a movie"-option.
       const movieInfo = Array.from(dom.window.document.querySelectorAll('select#movie option')).slice(1, 4)
@@ -148,10 +150,27 @@ export class WebScraper {
         for (let j = 0; j < movieTitles.length; j++) {
           const currentMovie = movieTitles[j]
           const urlToCheck = url + '/check?day=' + valuesToCheck[i] + '&movie=' + moviesToCheck[currentMovie]
-
-          console.log(urlToCheck)
+          urlsToCheck.push(urlToCheck)
         }
       }
+
+      for (const urlToCheck of urlsToCheck) {
+        try {
+          const response = await fetch(urlToCheck)
+          const data = await response.json()
+
+          if (!response.ok) {
+            const error = new Error('There was an error fetching the cinema data!')
+            error.status = response.status
+            throw error
+          } else {
+            showtimes.push(data)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      return showtimes
     } catch (error) {
       console.log(error)
     }

@@ -92,7 +92,8 @@ export class Orchestrator {
   async checkShowTimes () {
     try {
       // Code to scrape showtimes.
-      await this.scraper.scrapeShowtimes(this.#href[1], this.#availableDays)
+      const showtimes = await this.scraper.scrapeShowtimes(this.#href[1], this.#availableDays)
+      console.log(showtimes)
     } catch (error) {
       console.log(error)
     }
