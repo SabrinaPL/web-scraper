@@ -109,32 +109,44 @@ export class WebScraper {
   async scrapeShowtimes (url, availableDays) {
     try {
       const dom = await this.scrapeWebPage(url)
-      const daysToCheck = availableDays
-      const valuesToCheck = []
-      const moviesToCheck = { 'The Flying Deuces': '01', 'Keep Your Seats, Please': '02', 'A Day at the Races': '03' }
 
-      // Here I want to iterate through the available days array and check the day(s) in the availableDays array against the days in the dropdown menu to retrieve the value(s) for the day(s) that I want to check and push them into a new array.
+      const daysToCheck = availableDays
+      const moviesToCheck = {}
+      const movieDays = {}
+      const movieTitles = []
+      const valuesToCheck = []
+
+      // I changed the code as to retrieve the movie titles and their corresponding values straight from the DOM and creating an object with the info (same with the movie days, see code below), instead of hard coding them as before (similarly as in the scrapeCalendar method). Slice is used to slice away the "pick a movie"-option.
+      const movieInfo = Array.from(dom.window.document.querySelectorAll('select#movie option')).slice(1, 4)
+
+      // I iterate through the movieInfo array and push the text content and the value of each movie into the moviesToCheck object (code snippet suggested by chatGPT).
+      movieInfo.forEach(movie => {
+        const movieTitle = movie.textContent
+        const movieValue = movie.value
+        moviesToCheck[movieTitle] = movieValue
+      })
+
+      movieTitles.push(Object.keys(moviesToCheck))
+
+      console.log(moviesToCheck)
+      console.log(movieTitles)
+
+      const dayInfo = Array.from(dom.window.document.querySelectorAll('select#day option')).slice(1, 4)
+
+      dayInfo.forEach(day => {
+        const dayText = day.textContent
+        const dayValue = day.value
+        movieDays[dayText] = dayValue
+      })
+      console.log(movieDays)
+
+      // Here I use a nested for-loop to iterate through the available days and the movies to modify the url (with the retrieved values) so that I can use it in a fetch-request to check the showtimes for the available days.
       for (let i = 0; i < daysToCheck.length; i++) {
-        if (daysToCheck[i] === 'Friday') {
-          valuesToCheck.push(dom.window.document.querySelector('select#day option').value = '05')
-        }
-        if (daysToCheck[i] === 'Saturday') {
-          valuesToCheck.push(dom.window.document.querySelector('select#day option').value = '06')
-        }
-        if (daysToCheck[i] === 'Sunday') {
-          valuesToCheck.push(dom.window.document.querySelector('select#day option').value = '07')
+        for (let j = 0; j < movieTitles.length; j++) {
+          const currentMovie = movieTitles[j]
+          const urlToCheck = url + '/check?day=' + valuesToCheck[i] + '&movie=' + moviesToCheck[currentMovie]
         }
       }
-
-      // Here I modify the url (with the retrieved values) so that I can use it in a fetch-request to check the showtimes for the available days.
-      const urlToCheck = url + '/check?day=' + valuesToCheck[0] + '&movie=' + moviesToCheck['The Flying Deuces']
-
-      console.log(urlToCheck)
-      console.log(url)
-      console.log(valuesToCheck)
-      console.log(daysToCheck)
-
-      // await fetch()
     } catch (error) {
       console.log(error)
     }
