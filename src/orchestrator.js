@@ -6,7 +6,7 @@
 import { WebScraper } from './web-scraper.js'
 
 /**
- * Represents a class that works as an orchestrator between modules in the application.
+ * Represents a class that works as an orchestrator of the application process.
  *
  * @class
  */
@@ -15,6 +15,7 @@ export class Orchestrator {
   #href
   #availableDays = []
   #availableShowtimes = []
+  #earliestTimeToDine = []
 
   /**
    * Creates an instance of the Web Scraper.
@@ -122,6 +123,23 @@ export class Orchestrator {
       console.log(restaurantInfo)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  /**
+   * Method to calculate the earliest time when the friends can dine, based on available showtimes.
+   *
+   * @function
+   */
+  calculateEarliestTimeToDine () {
+    for (let i = 0; i < this.#availableShowtimes.length; i++) {
+      // Here I use the slice-method to extract the hour and minutes from the available showtimes object (values with the time keyword) and then add two hours to the hour value, after string to number conversion, to calculate the earliest time when the friends will be able to dine after the movies.
+      const showtime = this.#availableShowtimes[i].time
+      const showtimeHourToCalc = showtime.slice(0, 2)
+      const showtimeMinutesToCalc = showtime.slice(3, 5)
+      const diningTime = Number(showtimeHourToCalc) + 2 + ':' + showtimeMinutesToCalc
+
+      this.#earliestTimeToDine.push(diningTime)
     }
   }
 

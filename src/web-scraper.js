@@ -198,7 +198,7 @@ export class WebScraper {
         // I set redirect manual here to be able to retrieve the cookie from the response (as recommended by Johan and Mats during a handledning).
         redirect: 'manual',
         headers: {
-          'Content-Type': 'JSON'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           username: this.#username,
@@ -206,10 +206,31 @@ export class WebScraper {
         })
       })
 
-      // Here I want to retrieve the cookie from the response and add it to the headers for the next fetch-request.
-      const cookie = response.headers.raw()['set-cookie']
+      if (response.status === 302) {
+        // Here I want to retrieve the cookie from the response and add it to the headers for the next fetch-request.
+        const cookieToSend = response.headers.raw()['set-cookie']
 
-      console.log(response.headers.raw()['set-cookie'])
+        // Here I want to retrieve the next url to send the cookie to, from the response.
+        const redirectUrl = response.headers.get('Location')
+
+        const response2 = await fetch(redirectUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            cookie: cookieToSend
+          }
+        })
+
+        // Here I want to make sure that the response is ok before I retrieve the data.
+        if (response2.ok) {
+          const data = await response2.text()
+          console.log(data)
+        }
+      } else {
+        const error = new Error('There was an error fetching the restaurant data!')
+        error.status = response.status
+        throw error
+      }
     } catch (error) {
       console.log(error)
     }
