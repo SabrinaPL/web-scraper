@@ -185,6 +185,7 @@ export class WebScraper {
    * @async
    * @function
    * @param {object} url - the url to scrape.
+   * @returns {Promise<string[]>} An array of strings containing the booking information found on the page.
    */
   async scrapeRestaurant (url) {
     try {
@@ -217,7 +218,6 @@ export class WebScraper {
 
         // Here I want to retrieve the next url to send the cookie to, from the response.
         const redirectUrl = response.headers.get('Location')
-        console.log(redirectUrl)
 
         const response2 = await fetch(redirectUrl, {
           method: 'GET',
@@ -241,7 +241,6 @@ export class WebScraper {
 
           // Here I retrieve the restaurant info from the DOM, targeting the radio buttons (that contain the values with the booking information).
           const restaurantInfo = Array.from(dom2.window.document.querySelectorAll('.MsoNormal input[type="radio"]'))
-          console.log(restaurantInfo)
 
           const bookableTimes = []
 
@@ -250,7 +249,7 @@ export class WebScraper {
             bookableTimes.push(radiobtn.value)
           }
 
-          console.log(bookableTimes)
+          return bookableTimes
         }
       }
     } catch (error) {

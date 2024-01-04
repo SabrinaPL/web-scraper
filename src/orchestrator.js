@@ -68,8 +68,6 @@ export class Orchestrator {
       calendars.push(await this.scraper.scrapeCalendar(calendarLinkAbsolute))
     }
 
-    console.log(calendars)
-
     // Here I use the every-method to check (against the key value pairs in the calendar object) if all friends are available on a specific day.
     const fridayOK = calendars.every(calendar => calendar.Friday === 'OK')
     const saturdayOK = calendars.every(calendar => calendar.Saturday === 'OK')
@@ -120,7 +118,31 @@ export class Orchestrator {
   async checkRestaurantInfo () {
     try {
       const restaurantInfo = await this.scraper.scrapeRestaurant(this.#href[2])
-      console.log(restaurantInfo)
+      const bookableTimes = []
+
+      // Here I use the slice-method to extract the day, hour and minute values from the restaurant info and then create objects for each bookable time and push them into the bookableTimes array.
+      for (let i = 0; i < restaurantInfo.length; i++) {
+        const day = restaurantInfo[i].slice(0, 3)
+        const hour = restaurantInfo[i].slice(3, 5)
+        const minute = restaurantInfo[i].slice(5, 7)
+        const time = hour + ':' + minute
+        bookableTimes.push({ day, time })
+      }
+
+      const diningDayInfo = []
+
+      for (const days in this.#availableDays) {
+        // Here I've created a dayKey variable to use for comparison with the keys in bookableTimes (as suggested by chatGPT).
+        const dayKey = this.#availableDays[days].slice(0, 3).toLowerCase()
+        for (const time in bookableTimes) {
+          if (bookableTimes[time].day === dayKey) {
+            diningDayInfo.push(bookableTimes[time])
+          }
+        }
+        console.log(dayKey)
+      }
+
+      console.log(diningDayInfo)
 
       await this.calculateEarliestTimeToDine()
     } catch (error) {
