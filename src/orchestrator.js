@@ -15,7 +15,7 @@ export class Orchestrator {
   #href
   #availableDays = []
   #availableShowtimes = []
-  #earliestTimeToDine = []
+  #earliestTimesToDine = []
 
   /**
    * Creates an instance of the Web Scraper.
@@ -121,6 +121,8 @@ export class Orchestrator {
     try {
       const restaurantInfo = await this.scraper.scrapeRestaurant(this.#href[2])
       console.log(restaurantInfo)
+
+      await this.calculateEarliestTimeToDine()
     } catch (error) {
       console.log(error)
     }
@@ -131,7 +133,7 @@ export class Orchestrator {
    *
    * @function
    */
-  calculateEarliestTimeToDine () {
+  async calculateEarliestTimeToDine () {
     for (let i = 0; i < this.#availableShowtimes.length; i++) {
       // Here I use the slice-method to extract the hour and minutes from the available showtimes object (values with the time keyword) and then add two hours to the hour value, after string to number conversion, to calculate the earliest time when the friends will be able to dine after the movies.
       const showtime = this.#availableShowtimes[i].time
@@ -139,7 +141,7 @@ export class Orchestrator {
       const showtimeMinutesToCalc = showtime.slice(3, 5)
       const diningTime = Number(showtimeHourToCalc) + 2 + ':' + showtimeMinutesToCalc
 
-      this.#earliestTimeToDine.push(diningTime)
+      this.#earliestTimesToDine.push(diningTime)
     }
   }
 

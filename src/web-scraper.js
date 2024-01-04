@@ -189,6 +189,7 @@ export class WebScraper {
   async scrapeRestaurant (url) {
     try {
       const dom = await this.scrapeWebPage(url)
+
       // Here I retrieve the form action from the DOM and add it to the url to create the login url.
       const formAction = dom.window.document.querySelector('form').action
       const loginUrl = url + formAction
@@ -206,30 +207,51 @@ export class WebScraper {
         })
       })
 
-      if (response.status === 302) {
+      if (response.status !== 302) {
+        const error = new Error('There was an error logging in!')
+        error.status = response.status
+        throw error
+      } else {
         // Here I want to retrieve the cookie from the response and add it to the headers for the next fetch-request.
         const cookieToSend = response.headers.raw()['set-cookie']
 
         // Here I want to retrieve the next url to send the cookie to, from the response.
         const redirectUrl = response.headers.get('Location')
+        console.log(redirectUrl)
 
         const response2 = await fetch(redirectUrl, {
-          method: 'POST',
+          method: 'GET',
+          redirect: 'manual',
           headers: {
             'Content-Type': 'application/json',
-            cookie: cookieToSend
+            Cookie: cookieToSend
           }
         })
 
         // Here I want to make sure that the response is ok before I retrieve the data.
-        if (response2.ok) {
-          const data = await response2.text()
-          console.log(data)
+        if (!response2.ok) {
+          const error = new Error('There was an error fetching the restaurant data!')
+          error.status = response2.status
+          throw error
+        } else {
+          const restaurantData = await response2.text()
+
+          // I want to create a new DOM from the data retrieved from the response so that I can retrieve the restaurant info from the DOM.
+          const dom2 = new jsdom.JSDOM(restaurantData)
+
+          // Here I retrieve the restaurant info from the DOM, targeting the radio buttons (that contain the values with the booking information).
+          const restaurantInfo = Array.from(dom2.window.document.querySelectorAll('.MsoNormal input[type="radio"]'))
+          console.log(restaurantInfo)
+
+          const bookableTimes = []
+
+          // I want to iterate through the restaurantInfo array to retrieve the values with the booking information and push them into a new array.
+          for (const radiobtn of restaurantInfo) {
+            bookableTimes.push(radiobtn.value)
+          }
+
+          console.log(bookableTimes)
         }
-      } else {
-        const error = new Error('There was an error fetching the restaurant data!')
-        error.status = response.status
-        throw error
       }
     } catch (error) {
       console.log(error)
