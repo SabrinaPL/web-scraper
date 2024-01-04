@@ -44,6 +44,8 @@ export class Orchestrator {
 
       await this.checkShowTimes()
       console.log('Scraping showtimes... OK')
+
+      await this.checkRestaurantInfo()
     } catch (error) {
       console.log(error)
     }
@@ -86,14 +88,13 @@ export class Orchestrator {
   }
 
   /**
-   * Method to scrape show times from the cinema page.
+   * Method to retrieve and analyze available show times from the cinema page.
    *
    * @async
    * @function
    */
   async checkShowTimes () {
     try {
-      // Code to scrape showtimes.
       const showtimesInfo = await this.scraper.scrapeShowtimes(this.#href[1], this.#availableDays)
       const showtimes = showtimesInfo.flat()
 
@@ -105,6 +106,20 @@ export class Orchestrator {
 
       console.log(showtimes)
       console.log(this.#availableShowtimes)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /** Method to retrieve and analyze restaurant data.
+   *
+   * @async
+   * @function
+   */
+  async checkRestaurantInfo () {
+    try {
+      const restaurantInfo = await this.scraper.scrapeRestaurant(this.#href[2])
+      console.log(restaurantInfo)
     } catch (error) {
       console.log(error)
     }

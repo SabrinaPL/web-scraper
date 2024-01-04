@@ -15,6 +15,9 @@ import fetch from 'node-fetch'
  * @class
  */
 export class WebScraper {
+  #username = 'zeke'
+  #password = 'coys'
+
   /**
    * Asyncronous method to scrape information from a webpage.
    *
@@ -172,6 +175,41 @@ export class WebScraper {
       }
 
       return showtimes
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  /** Method to scrape restaurant booking info.
+   *
+   * @async
+   * @function
+   * @param {object} url - the url to scrape.
+   */
+  async scrapeRestaurant (url) {
+    try {
+      const dom = await this.scrapeWebPage(url)
+      // Here I retrieve the form action from the DOM and add it to the url to create the login url.
+      const formAction = dom.window.document.querySelector('form').action
+      const loginUrl = url + formAction
+
+      const response = await fetch(loginUrl, {
+        method: 'POST',
+        // I set redirect manual here to be able to retrieve the cookie from the response (as recommended by Johan and Mats during a handledning).
+        redirect: 'manual',
+        headers: {
+          'Content-Type': 'JSON'
+        },
+        body: JSON.stringify({
+          username: this.#username,
+          password: this.#password
+        })
+      })
+
+      // Here I want to retrieve the cookie from the response and add it to the headers for the next fetch-request.
+      const cookie = response.headers.raw()['set-cookie']
+
+      console.log(response.headers.raw()['set-cookie'])
     } catch (error) {
       console.log(error)
     }
