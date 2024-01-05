@@ -19,6 +19,7 @@ export class Orchestrator {
   #diningTimes = []
   #possibleDiningTimes = []
   #suggestedMovies = []
+  #restaurantTime = ''
 
   /**
    * Creates an instance of the Web Scraper.
@@ -52,6 +53,7 @@ export class Orchestrator {
       await this.checkRestaurantInfo()
       console.log('Scraping possible reservations... OK')
 
+      console.log('\n ~~~~ Suggestions ~~~~')
       await this.createSuggestion()
     } catch (error) {
       console.log(error)
@@ -197,7 +199,23 @@ export class Orchestrator {
       }
     }
     this.#suggestedMovies = new Set(movies)
-    console.log(this.#suggestedMovies)
+
+    // Here I iterate through the suggestedMovies array and log the suggested movies, days and times and also free dining times to the console.
+    for (const day of this.#suggestedMovies) {
+      const movieDay = day.day
+      const movieTime = day.time
+      const movieTitle = day.movie
+      const movieDayKey = movieDay.slice(0, 3).toLowerCase()
+
+      // I want to retrieve the availale dining time that matches the current movie day.
+      for (const diningTime of this.#possibleDiningTimes) {
+        if (diningTime.day === movieDayKey) {
+          this.#restaurantTime = diningTime.time
+        }
+      }
+
+      console.log(`* On ${movieDay}, ${movieTitle} begins at ${movieTime} and there is a free table to book at the restaurant between ${this.#restaurantTime}`)
+    }
   }
 
   /**
