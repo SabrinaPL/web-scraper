@@ -100,8 +100,7 @@ export class Orchestrator {
    */
   async checkShowTimes () {
     try {
-      const showtimesInfo = await this.scraper.scrapeShowtimes(this.#href[1], this.#availableDays)
-      const showtimes = showtimesInfo.flat()
+      const showtimes = await this.scraper.scrapeShowtimes(this.#href[1], this.#availableDays)
 
       for (const showtime of showtimes) {
         if (showtime.status === 1) {
@@ -156,7 +155,6 @@ export class Orchestrator {
         }
       }
       this.#possibleDiningTimes = new Set(this.#diningTimes)
-      console.log(this.#possibleDiningTimes)
     } catch (error) {
       console.log(error)
     }
@@ -185,6 +183,8 @@ export class Orchestrator {
    * @function
    */
   async createSuggestion () {
+    const movies = []
+
     // Here I want to check which movies are available before the earliest time to dine and push them into the suggestedMovies array.
     for (const movie in this.#availableShowtimes) {
       const movieTime = this.#availableShowtimes[movie].time
@@ -192,12 +192,12 @@ export class Orchestrator {
       for (const diningTime of this.#possibleDiningTimes) {
         const diningHour = diningTime.time.slice(0, 2)
         if (movieHour < diningHour) {
-          this.#suggestedMovies.push(this.#availableShowtimes[movie])
+          movies.push(this.#availableShowtimes[movie])
         }
       }
     }
-    const suggestedMoviesSet = new Set(this.#suggestedMovies)
-    console.log(suggestedMoviesSet)
+    this.#suggestedMovies = new Set(movies)
+    console.log(this.#suggestedMovies)
   }
 
   /**

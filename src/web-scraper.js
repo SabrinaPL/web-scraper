@@ -173,7 +173,31 @@ export class WebScraper {
         }
       }
 
-      return showtimes
+      const showtimesUpdated = showtimes.flat()
+
+      // I want to iterate through the showtimesUpdated array and replace the day values with the day names.
+      for (const showtime of showtimesUpdated) {
+        if (showtime.day === '05') {
+          showtime.day = 'Friday'
+        } else if (showtime.day === '06') {
+          showtime.day = 'Saturday'
+        } else if (showtime.day === '07') {
+          showtime.day = 'Sunday'
+        }
+      }
+
+      // I want to iterate through the showtimesUpdated array to replace the movie values with the movie titles.
+      for (const showtime of showtimesUpdated) {
+        if (showtime.movie === '01') {
+          showtime.movie = movieTitles[0]
+        } else if (showtime.movie === '02') {
+          showtime.movie = movieTitles[1]
+        } else if (showtime.movie === '03') {
+          showtime.movie = movieTitles[2]
+        }
+      }
+
+      return showtimesUpdated
     } catch (error) {
       console.log(error)
     }
