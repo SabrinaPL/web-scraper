@@ -16,6 +16,9 @@ export class Orchestrator {
   #availableDays = []
   #availableShowtimes = []
   #earliestTimesToDine = []
+  #diningTimes = []
+  #possibleDiningTimes = []
+  #suggestedMovies = []
 
   /**
    * Creates an instance of the Web Scraper.
@@ -47,6 +50,9 @@ export class Orchestrator {
       console.log('Scraping showtimes... OK')
 
       await this.checkRestaurantInfo()
+      console.log('Scraping possible reservations... OK')
+
+      await this.createSuggestion()
     } catch (error) {
       console.log(error)
     }
@@ -102,9 +108,6 @@ export class Orchestrator {
           this.#availableShowtimes.push(showtime)
         }
       }
-
-      console.log(showtimes)
-      console.log(this.#availableShowtimes)
     } catch (error) {
       console.log(error)
     }
@@ -120,12 +123,14 @@ export class Orchestrator {
       const restaurantInfo = await this.scraper.scrapeRestaurant(this.#href[2])
       const bookableTimes = []
 
+      await this.calculateEarliestTimeToDine()
+
       // Here I use the slice-method to extract the day, hour and minute values from the restaurant info and then create objects for each bookable time and push them into the bookableTimes array.
       for (let i = 0; i < restaurantInfo.length; i++) {
         const day = restaurantInfo[i].slice(0, 3)
-        const hour = restaurantInfo[i].slice(3, 5)
-        const minute = restaurantInfo[i].slice(5, 7)
-        const time = hour + ':' + minute
+        const startHour = restaurantInfo[i].slice(3, 5)
+        const endHour = restaurantInfo[i].slice(5, 7)
+        const time = startHour + ':' + '00' + '-' + endHour + ':' + '00'
         bookableTimes.push({ day, time })
       }
 
@@ -139,12 +144,19 @@ export class Orchestrator {
             diningDayInfo.push(bookableTimes[time])
           }
         }
-        console.log(dayKey)
+
+        for (const times in this.#earliestTimesToDine) {
+          const dineFromHourKey = this.#earliestTimesToDine[times].slice(0, 2)
+          for (const dineInfo of diningDayInfo) {
+            const startDiningHourKey = dineInfo.time.slice(0, 2)
+            if (startDiningHourKey >= dineFromHourKey) {
+              this.#diningTimes.push(dineInfo)
+            }
+          }
+        }
       }
-
-      console.log(diningDayInfo)
-
-      await this.calculateEarliestTimeToDine()
+      this.#possibleDiningTimes = new Set(this.#diningTimes)
+      console.log(this.#possibleDiningTimes)
     } catch (error) {
       console.log(error)
     }
@@ -165,6 +177,27 @@ export class Orchestrator {
 
       this.#earliestTimesToDine.push(diningTime)
     }
+  }
+
+  /**
+   * Method to create a suggestion based on the available showtimes and restaurant info.
+   *
+   * @function
+   */
+  async createSuggestion () {
+    // Here I want to check which movies are available before the earliest time to dine and push them into the suggestedMovies array.
+    for (const movie in this.#availableShowtimes) {
+      const movieTime = this.#availableShowtimes[movie].time
+      const movieHour = movieTime.slice(0, 2)
+      for (const diningTime of this.#possibleDiningTimes) {
+        const diningHour = diningTime.time.slice(0, 2)
+        if (movieHour < diningHour) {
+          this.#suggestedMovies.push(this.#availableShowtimes[movie])
+        }
+      }
+    }
+    const suggestedMoviesSet = new Set(this.#suggestedMovies)
+    console.log(suggestedMoviesSet)
   }
 
   /**

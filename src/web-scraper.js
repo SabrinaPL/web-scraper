@@ -131,7 +131,6 @@ export class WebScraper {
       })
 
       const movieTitles = Object.keys(moviesToCheck)
-      console.log(movieTitles)
 
       const dayInfo = Array.from(dom.window.document.querySelectorAll('select#day option')).slice(1, 4)
 
