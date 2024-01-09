@@ -15,7 +15,6 @@
   "author": "Sabrina Prichard-Lybeck <sp223kz@student.lnu.se>",
   "license": "ISC",
   "dependencies": {
-    "fetch": "^1.1.0",
     "jsdom": "^23.0.1",
     "validator": "^13.11.0"
   },

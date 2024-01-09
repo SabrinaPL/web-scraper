@@ -7,7 +7,6 @@
 
 import validator from 'validator'
 import jsdom from 'jsdom'
-import fetch from 'node-fetch'
 
 /**
  * Represents a web scraper.
@@ -216,7 +215,8 @@ export class WebScraper {
 
       // Here I retrieve the form action from the DOM and add it to the url to create the login url.
       const formAction = dom.window.document.querySelector('form').action
-      const loginUrl = url + formAction
+      const actionSlice = formAction.slice(2, formAction.length)
+      const loginUrl = url + actionSlice
 
       const response = await fetch(loginUrl, {
         method: 'POST',
@@ -237,10 +237,10 @@ export class WebScraper {
         throw error
       } else {
         // Here I want to retrieve the cookie from the response and add it to the headers for the next fetch-request.
-        const cookieToSend = response.headers.raw()['set-cookie']
+        const cookieToSend = response.headers.get('set-cookie')
 
         // Here I want to retrieve the next url to send the cookie to, from the response.
-        const redirectUrl = response.headers.get('Location')
+        const redirectUrl = url + response.headers.get('Location')
 
         const response2 = await fetch(redirectUrl, {
           method: 'GET',
